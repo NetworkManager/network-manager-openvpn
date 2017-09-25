@@ -544,7 +544,7 @@ update_tls (GtkBuilder *builder, const char *prefix, NMSettingVpn *s_vpn)
 	                          NM_OPENVPN_KEY_CERT,
 	                          NM_OPENVPN_KEY_KEY,
 	                          NM_OPENVPN_KEY_CERTPASS,
-	                          prefix, "ca_cert", s_vpn);
+	                          prefix, "user_cert", s_vpn);
 }
 
 static void
