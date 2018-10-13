@@ -8,8 +8,7 @@ PKG_NAME=NetworkManager-openvpn
 
 { test -f "$srcdir/configure.ac" \
   && test -f "$srcdir/auth-dialog/main.c"; } || {
-    echo "**Error**: Directory ${srcdir} does not look like the"
-    echo " top-level $PKG_NAME directory"
+    echo "**Error**: Directory ${srcdir} does not look like the top-level ${PKG_NAME} directory"
     exit 1
 }
 
