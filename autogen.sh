@@ -24,5 +24,6 @@ if cd "$srcdir"; then
     autoreconf --install --symlink
     intltoolize --force
     autoreconf
-    [ -n "$NOCONFIGURE" ] && ./configure --enable-maintainer-mode "$@"
+    # Run ./configure if NOCONFIGURE environmental variable is not defined (is empty)
+    [ -z "$NOCONFIGURE" ] && ./configure --enable-maintainer-mode "$@"
 fi
