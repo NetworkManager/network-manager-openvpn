@@ -22,7 +22,7 @@ SUBDIRS = \
 plugindir = $(libdir)/NetworkManager
 plugin_LTLIBRARIES =
 
-dbusservicedir = $(sysconfdir)/dbus-1/system.d
+dbusservicedir = $(datadir)/dbus-1/system.d
 dbusservice_DATA = nm-openvpn-service.conf
 
 nmvpnservicedir = $(NM_VPN_SERVICE_DIR)
