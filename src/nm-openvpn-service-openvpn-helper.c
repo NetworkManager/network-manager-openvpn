@@ -296,7 +296,7 @@ get_ip4_routes (void)
 }
 
 static GVariant *
-get_ip6_routes (void)
+get_ip6_routes (const char *fallback_gateway)
 {
 	gs_unref_ptrarray GPtrArray *routes = NULL;
 	guint i;
@@ -325,7 +325,7 @@ get_ip6_routes (void)
 		nm_sprintf_buf (key_name, "route_ipv6_gateway_%u", i);
 		tmp = getenv (key_name);
 
-		route = nm_ip_route_new (AF_INET6, dst, prefix, tmp, -1, &error);
+		route = nm_ip_route_new (AF_INET6, dst, prefix, tmp ?: fallback_gateway, -1, &error);
 		if (!route) {
 			_LOGW ("Ignoring route#%u: %s", i, error->message);
 			g_error_free (error);
@@ -639,16 +639,6 @@ main (int argc, char *argv[])
 			helper_failed (proxy, "IP6 Address");
 	}
 
-	/* IPv6 remote address */
-	tmp = getenv ("ifconfig_ipv6_remote");
-	if (tmp && strlen (tmp)) {
-		val = addr6_to_gvariant (tmp);
-		if (val)
-			g_variant_builder_add (&ip6builder, "{sv}", NM_VPN_PLUGIN_IP6_CONFIG_PTP, val);
-		else
-			helper_failed (proxy, "IP6 PTP Address");
-	}
-
 	/* IPv6 netbits */
 	tmp = getenv ("ifconfig_ipv6_netbits");
 	if (tmp && strlen (tmp)) {
@@ -664,7 +654,10 @@ main (int argc, char *argv[])
 		}
 	}
 
-	val = get_ip6_routes ();
+	/* Note: for IPv6 'ifconfig_ipv6_remote' is not used as the peer
+	 * address but as fallback gateway for routes.
+	 */
+	val = get_ip6_routes (getenv ("ifconfig_ipv6_remote"));
 	if (val)
 		g_variant_builder_add (&ip6builder, "{sv}", NM_VPN_PLUGIN_IP6_CONFIG_ROUTES, val);
 	else if (is_restart) {
